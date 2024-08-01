@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementNotInteractableException
+from selenium.webdriver.chrome.options import Options
 
 import argparse
 from dotenv import load_dotenv
@@ -15,7 +16,7 @@ from pathlib import WindowsPath
 absPathFromFile = str(WindowsPath(__file__).parent.absolute())
 
 HOME_URL = 'https://developer.spotify.com'
-DASHBOARD_URL = 'https://developer.spotify.com/dashboard/95879b02985444b18607304485169873/users'
+DASHBOARD_URL = 'https://developer.spotify.com/dashboard/3396197e1137496bb77ceaa11b0d4a50/users'
 
 #Function to wait for presence of element before returning it
 def search_for_element(browser : webdriver.Chrome, by : str, value : str, timeout : int = 10) -> WebElement:
@@ -40,18 +41,23 @@ password = os.getenv("SPOTIFY_PASSWORD")
 if(args.name == None or args.email == None):
     raise ValueError("Must run script with name and email arguments.")
 
-#Begin session and load cookies
+#Begin session and load cookies\
+options = Options()
+#options.add_argument("--headless=new")
 browser :  webdriver.Chrome
-browser = webdriver.Chrome()
+browser = webdriver.Chrome(options=options)
 browser.maximize_window()
 browser.get(HOME_URL) #Must be at this domain to add cookies
-with open(absPathFromFile+"\\cookies.json", "r") as f:
-    try:
-        data = json.load(f)
-        for cookie in data:
-            browser.add_cookie(cookie)
-    except json.JSONDecodeError:
-        pass
+try:
+    with open(absPathFromFile+"\\cookies.json", "r") as f:
+        try:
+            data = json.load(f)
+            for cookie in data:
+                browser.add_cookie(cookie)
+        except json.JSONDecodeError:
+            pass
+except FileNotFoundError:
+    pass
 
 #If redirected from this link, we will have to sign in first
 browser.get(DASHBOARD_URL)
@@ -120,3 +126,5 @@ with open(absPathFromFile+"\\cookies.json", "w") as f:
             cookies.append(cookie)
 
     json.dump(cookies, f)
+
+print("OKAY")

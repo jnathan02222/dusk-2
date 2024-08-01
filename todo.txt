@@ -1,0 +1,7 @@
+Implement add user
+Add more error handling (search 'fetch')
+Spamming join?
+#Game not loading
+#Game not starting 
+#Defocusing canvas
+
