@@ -156,10 +156,7 @@ app.prepare().then( () => {
   
       request.post(authOptions, function(error, response, body) {
         if (!error && response.statusCode === 200) {
-          res.cookie('spotify_token', body.access_token, {
-            httpOnly: true,
-            secure: true
-          });
+          res.cookie('spotify_token', body.access_token);
 
           res.redirect('/play');
         } else {
@@ -268,10 +265,7 @@ app.prepare().then( () => {
   });
 
   server.put("/track-id", (req, res) => {
-    res.cookie('track_id', req.body.track_id, {
-      httpOnly: true,
-      secure: true
-    });
+    res.cookie('track_id', req.body.track_id);
     res.status(201).json({ message : 'success'});
   });
 
