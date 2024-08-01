@@ -4,19 +4,21 @@ var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 var next = require('next')
-const spawn = require("child_process").spawn;
+var puppeteer = require('puppeteer')
 
-//Environment variables
+//Frontend variables
 var client_id = process.env.SPOTIFY_CLIENT_ID;
 var client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 var port = 3000;
 var dev = true;
 var redirect_uri = "http://localhost:3000/callback"
-var game_uri = "http://localhost:3000/play"
 var stateKey = "spotify_auth_state";
-var addUserScriptPath = "add_user.py";
 
-var token = "INVALID";
+//Puppeteer variables
+const dashboard_url = 'https://developer.spotify.com/dashboard/3396197e1137496bb77ceaa11b0d4a50/users'
+const spotify_username = process.env.SPOTIFY_USERNAME;
+const spotify_password = process.env.SPOTIFY_PASSWORD;
+var browser = null;
 
 //Function to generate a random string for the 'state' parameter, which improves security
 var generateRandomString = function(length) {
@@ -61,10 +63,43 @@ var spotifyApiRequest = function(url, req, res){
   });
 }
 
+async function addSpotifyUser(email){
+  //Open browser
+  if(browser === null){
+    browser = await puppeteer.launch({headless:true});
+  }
+  const page = await browser.newPage();
+  await page.setViewport({width: 1920, height: 1024});
+
+  //Login if redirected
+  await page.goto(dashboard_url);
+  try{
+    await page.locator('.Button-sc-1dqy6lx-0').setTimeout(3000).click();
+    await page.locator('#login-username').fill(spotify_username);
+    await page.locator('#login-password').fill(spotify_password);
+    await page.locator('.ButtonInner-sc-14ud5tc-0').click();
+    await page.waitForNavigation();
+    await page.goto(dashboard_url);
+  }catch{
+  } 
+  //Delete first user if necessary
+  try{
+    await page.locator('#name').setTimeout(3000).click();
+  }catch{
+    await page.locator(".sc-3bd49785-0 >>> button").setTimeout(3000).click();
+    await page.locator('.Link-sc-1v366a6-0').setTimeout(3000).click();
+  }
+  //Add new user
+  await page.locator('#name').fill(email);
+  await page.locator('#email').fill(email);
+  await page.locator('.ButtonInner-sc-14ud5tc-0').click();
+  await new Promise(resolve=>{setTimeout(resolve, 2000)});
+  await page.close();
+}
+
 
 var app = next({dev : dev});
 const handle = app.getRequestHandler();
-
 //Start Next app
 app.prepare().then( () => {
   var server = express();
@@ -173,8 +208,30 @@ app.prepare().then( () => {
   });
 
   server.put("/add-user", (req, res) => {
-    
-  
+    var options = {
+      url: 'https://api.spotify.com/v1/me',
+      headers: { 'Authorization': 'Bearer ' + req.cookies['spotify_token'] },
+      json: true
+    };
+    request.get(options, function(error, response, body) {
+      if(!error && response.statusCode === 200){
+        res.status(200).send("OK");
+      }else if(!error && response.statusCode === 403){
+        addSpotifyUser(req.body.email).then(
+          ()=>{
+            request.get(options, function(error, response, body) {
+              if(!error && response.statusCode === 200){
+                res.status(200).send("OK");
+              }else{
+                res.status(500).send("Something went wrong.");
+              }
+            });
+          }
+        );
+      }else{
+        res.status(500).send("Invalid email.");
+      }
+    });
   });
 
   server.get("/spotify-search", (req, res) => {
@@ -229,11 +286,3 @@ app.prepare().then( () => {
 });
 
 
-/*
-console.log("Hi")
-var pythonExec = spawn("ls", [`${addUserScriptPath}`]);
-// -n ${req.body["email"]} -e ${req.body["email"]}
-pythonExec.stdout.on('data', (data) => {
-  console.log(data)
-})
-*/

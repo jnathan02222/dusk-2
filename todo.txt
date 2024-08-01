@@ -1,7 +1,11 @@
-Implement add user
 Add more error handling (search 'fetch')
-Spamming join?
+Spamming join? + Ensure all endpoints are secure
+Rewrite cookie functions?
+
 #Game not loading
 #Game not starting 
 #Defocusing canvas
 
+
+
+#Implement add user
