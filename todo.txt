@@ -1,6 +1,7 @@
 Add more error handling (search 'fetch')
 Spamming join? + Ensure all endpoints are secure
 Rewrite cookie functions?
+Handle rebooting
 
 #Game not loading
 #Game not starting 

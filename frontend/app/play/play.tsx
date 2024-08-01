@@ -24,7 +24,7 @@ export default function Play({signedIn} : {signedIn : boolean}) {
             
       </div>
       <div className="text-white absolute w-full flex min-h-screen justify-center	items-center -z-10">
-        <p>JavaScript failed to load, reload the page.</p>
+        <p>JavaScript may have failed to load. Wait a minute before reloading the page.</p>
       </div>
     </main>
   );
