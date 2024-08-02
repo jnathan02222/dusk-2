@@ -3,8 +3,9 @@ var request = require('request');
 var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
-var next = require('next')
-var puppeteer = require('puppeteer')
+var next = require('next');
+var puppeteer = require('puppeteer');
+var https = require('https');
 
 //Frontend variables
 var client_id = process.env.SPOTIFY_CLIENT_ID;
