@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var next = require('next');
 var puppeteer = require('puppeteer');
 var https = require('https');
+var fs = require('fs');
 
 //Frontend variables
 var client_id = process.env.SPOTIFY_CLIENT_ID;
