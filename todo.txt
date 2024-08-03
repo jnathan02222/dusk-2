@@ -1,12 +1,15 @@
 Add more error handling (search 'fetch')
+Puppeteer session won't last forever?
+
 Spamming join? + Ensure all endpoints are secure
 Rewrite cookie functions?
-Handle rebooting
+
+
+
 
 #Game not loading
 #Game not starting 
 #Defocusing canvas
 
-
-
+#Handle rebooting
 #Implement add user

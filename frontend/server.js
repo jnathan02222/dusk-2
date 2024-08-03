@@ -99,7 +99,6 @@ async function addSpotifyUser(email){
   await page.close();
 }
 
-
 var app = next({dev : dev});
 const handle = app.getRequestHandler();
 //Start Next app
@@ -282,3 +281,10 @@ app.prepare().then( () => {
 });
 
 
+/*
+var options = {
+  key: fs.readFileSync('C:\\Users\\Administrator\\client-key.pem'),
+  cert: fs.readFileSync('C:\\Users\\Administrator\\client-cert.pem')
+};
+https.createServer(options, server).listen(port);
+*/
