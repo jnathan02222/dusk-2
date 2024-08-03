@@ -227,6 +227,10 @@ app.prepare().then( () => {
                   }
                 });
               }
+            ).error(
+              ()=>{
+                res.status(500).send("Something went wrong.");
+              }
             );
           }else{
             res.status(500).send("Invalid email.");
