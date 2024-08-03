@@ -4,12 +4,11 @@ Puppeteer session won't last forever?
 Spamming join? + Ensure all endpoints are secure
 Rewrite cookie functions?
 
-
-
+#Defocusing canvas
+#Space to start
 
 #Game not loading
 #Game not starting 
-#Defocusing canvas
 
 #Handle rebooting
 #Implement add user
