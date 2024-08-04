@@ -109,7 +109,14 @@ app.prepare().then( () => {
       server.use(cors());
       server.use(cookieParser());
       server.use(express.json());
-      
+      /*server.use((req, res, next)=>{
+        if (req.secure) {
+          // Request is already HTTPS
+          return next();
+        }
+        // Redirect to HTTPS
+        res.redirect(`https://${req.headers.host}${req.originalUrl}`); //originalUrl preserves query
+      });*/
     
       //Endpoints
     
@@ -285,14 +292,6 @@ app.prepare().then( () => {
       //Start server
       console.log(`Listening`);
       /*
-      server.use((req, res, next)=>{
-        if (req.secure) {
-          // Request is already HTTPS
-          return next();
-        }
-        // Redirect to HTTPS
-        res.redirect(`https://${req.headers.host}${req.originalUrl}`); //originalUrl preserves query
-      });
       var options = {
         key: fs.readFileSync('C:\\Users\\Administrator\\client-key.pem'),
         cert: fs.readFileSync('C:\\Users\\Administrator\\client-cert.pem')
