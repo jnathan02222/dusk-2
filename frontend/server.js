@@ -6,12 +6,12 @@ var cookieParser = require('cookie-parser');
 var next = require('next');
 var puppeteer = require('puppeteer');
 var https = require('https');
+var http = require('http')
 var fs = require('fs');
 
 //Frontend variables
 var client_id = process.env.SPOTIFY_CLIENT_ID;
 var client_secret = process.env.SPOTIFY_CLIENT_SECRET;
-var port = 3000;
 var dev = true;
 var redirect_uri = "http://localhost:3000/callback"
 var stateKey = "spotify_auth_state";
@@ -109,6 +109,7 @@ app.prepare().then( () => {
       server.use(cors());
       server.use(cookieParser());
       server.use(express.json());
+      
     
       //Endpoints
     
@@ -282,16 +283,23 @@ app.prepare().then( () => {
       });
     
       //Start server
-      console.log(`Listening on ${port}`);
-      server.listen(port);
+      console.log(`Listening`);
+      /*
+      server.use((req, res, next)=>{
+        if (req.secure) {
+          // Request is already HTTPS
+          return next();
+        }
+        // Redirect to HTTPS
+        res.redirect(`https://${req.headers.host}${req.originalUrl}`); //originalUrl preserves query
+      });
+      var options = {
+        key: fs.readFileSync('C:\\Users\\Administrator\\client-key.pem'),
+        cert: fs.readFileSync('C:\\Users\\Administrator\\client-cert.pem')
+      };
+      https.createServer(options, server).listen(443);*/
+      http.createServer(server).listen(80);
     });      
   }
 );
 
-/*
-var options = {
-  key: fs.readFileSync('C:\\Users\\Administrator\\client-key.pem'),
-  cert: fs.readFileSync('C:\\Users\\Administrator\\client-cert.pem')
-};
-https.createServer(options, server).listen(port);
-*/

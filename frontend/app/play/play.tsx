@@ -11,7 +11,6 @@ export default function Play({signedIn} : {signedIn : boolean}) {
     if(elem.nodeName != "MAIN" && elem.nodeName != "DIV"){
       return;
     }
-    console.log("FOCUS")
     if(canvasRef.current){
       canvasRef.current.focus();
     } 
