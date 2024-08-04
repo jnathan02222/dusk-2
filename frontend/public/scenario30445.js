@@ -18121,7 +18121,9 @@ function PlayButton_act($this) {
                                     response=>{
                                         setTimeout(function(){
                                             spotify_player.pause().then(()=>{
-                                                $this.$running = 1;
+                                                spotify_player.setVolume(0.5).then(()=>{
+                                                    $this.$running = 1;
+                                                });
                                             });
                                         }, 2000)
                                     }
@@ -18728,12 +18730,10 @@ function Player_run($this) {
     else {
         $this.$linkBox1.$isValid();
         if (!$this.$startedRunning) {
-            spotify_player.setVolume(0.5).then(()=>{
-                spotify_player.seek(0).then(() => {
-                    spotify_player.resume().then(() => {
-                        $this.$xSpeed = 8.0;
-                        $this.$startedRunning = 1;
-                    });
+            spotify_player.seek(0).then(() => {
+                spotify_player.resume().then(() => {
+                    $this.$xSpeed = 8.0;
+                    $this.$startedRunning = 1;
                 });
             });
             $this.$spacePressed = 1;

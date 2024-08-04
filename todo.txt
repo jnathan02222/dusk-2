@@ -1,16 +1,15 @@
+HIGH PRIOTIY
 Add more error handling (search 'fetch')
 Game not loading
-Webplayer should start song on restart (play could keep going to next song and restart the wrong one) 
 
+LOW PRIOTIY
+Webplayer should start song on restart 
 Puppeteer session won't last forever?
-
 Rewrite cookie functions?
-
 Spamming join? + Ensure all endpoints are secure
 
-
 #http to https redirect
-#added pausing track before and after gameplay
+#added pausing track before and after gameplay (otherwise play could keep going to next song and restart the wrong one) 
 
 #Game not starting 
 #Defocusing canvas
