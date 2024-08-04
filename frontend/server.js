@@ -1,3 +1,12 @@
+/*
+3 edits for hosting
+
+http and https listen
+callback
+http redirect middleware
+
+*/
+
 var express = require('express');
 var request = require('request');
 var cors = require('cors');
@@ -109,7 +118,9 @@ app.prepare().then( () => {
       server.use(cors());
       server.use(cookieParser());
       server.use(express.json());
-      /*server.use((req, res, next)=>{
+      /*
+      MUST COME BEFORE
+      server.use((req, res, next)=>{
         if (req.secure) {
           // Request is already HTTPS
           return next();
