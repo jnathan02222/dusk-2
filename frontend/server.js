@@ -297,8 +297,9 @@ app.prepare().then( () => {
         key: fs.readFileSync('C:\\Users\\Administrator\\client-key.pem'),
         cert: fs.readFileSync('C:\\Users\\Administrator\\client-cert.pem')
       };
-      https.createServer(options, server).listen(443);*/
-      http.createServer(server).listen(80);
+      https.createServer(options, server).listen(443);
+      http.createServer(server).listen(80);*/
+      server.listen(3000);
     });      
   }
 );

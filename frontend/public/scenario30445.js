@@ -18114,15 +18114,19 @@ function PlayButton_act($this) {
                             
                             
                             $this.$started0 = 1;
-                            spotify_player.setVolume(0);
                             $this.$duration = data.track.duration;
         
-        
-                            fetch(`/start-webplayer?device_id=${spotify_device_id}`, {method : "PUT"}).then(
-                                response=>{
-                                    setTimeout(function(){$this.$running = 1;}, 2000)
-                                }
-                            );
+                            spotify_player.setVolume(0).then(()=>{
+                                fetch(`/start-webplayer?device_id=${spotify_device_id}`, {method : "PUT"}).then(
+                                    response=>{
+                                        setTimeout(function(){
+                                            spotify_player.pause().then(()=>{
+                                                $this.$running = 1;
+                                            });
+                                        }, 2000)
+                                    }
+                                );
+                            });
                         }
                     );
                 }
@@ -18724,12 +18728,14 @@ function Player_run($this) {
     else {
         $this.$linkBox1.$isValid();
         if (!$this.$startedRunning) {
-            spotify_player.seek(0).then(() => {
-                $this.$xSpeed = 8.0;
-                $this.$startedRunning = 1;
+            spotify_player.setVolume(0.5).then(()=>{
+                spotify_player.seek(0).then(() => {
+                    spotify_player.resume().then(() => {
+                        $this.$xSpeed = 8.0;
+                        $this.$startedRunning = 1;
+                    });
+                });
             });
-            spotify_player.resume();
-            spotify_player.setVolume(0.5);
             $this.$spacePressed = 1;
         } else if ($this.$xSpeed > 0.0 && !$this.$spacePressed) {
             $this.$setLocation0($this.$getExactX(), $this.$getExactY() + 10.0);
@@ -18996,7 +19002,7 @@ function City_run($this) {
         if ($rt_suspending()) {
             break main;
         }
-        spotify_player.setVolume(0);
+        spotify_player.pause();
         $this.$getWorld().$removeObject($this.$progressBar);
         $this.$gameOver0 = 1;
         $this.$timer = 0.0;
@@ -19006,7 +19012,7 @@ function City_run($this) {
         if ($rt_suspending()) {
             break main;
         }
-        spotify_player.setVolume(0);
+        spotify_player.pause(0);
         $this.$getWorld().$removeObject($this.$progressBar);
         $this.$gameOver0 = 1;
         $this.$timer = 0.0;

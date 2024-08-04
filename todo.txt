@@ -1,14 +1,16 @@
 Add more error handling (search 'fetch')
 Game not loading
-Webplayer should start song on restart (play could keep going to next song and restart the wrong one) and is seek better than resume?
+Webplayer should start song on restart (play could keep going to next song and restart the wrong one) 
+
 Puppeteer session won't last forever?
+
+Rewrite cookie functions?
+
+Spamming join? + Ensure all endpoints are secure
 
 
 #http to https redirect
-
-
-Spamming join? + Ensure all endpoints are secure
-Rewrite cookie functions?
+#added pausing track before and after gameplay
 
 #Game not starting 
 #Defocusing canvas
