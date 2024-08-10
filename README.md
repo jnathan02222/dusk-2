@@ -2,7 +2,7 @@
 A browser game based on the Spotify API. Implemented using Next.js, Express.js and Puppeteer.
 
 # Installation
-Create a new app at https://developer.spotify.com/
+Create a new app at https://developer.spotify.com/. Make sure to add 'http://localhost:3000/' as a callback url.
 
 In the frontend directory define, an .env file with the following variables:
 ```
