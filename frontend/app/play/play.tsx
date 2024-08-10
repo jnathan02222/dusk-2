@@ -30,7 +30,7 @@ export default function Play({signedIn} : {signedIn : boolean}) {
   return (
     <main onClick={focusCanvas} className="flex min-h-screen justify-center	items-center p-24">
       {signedIn && <script src="https://sdk.scdn.co/spotify-player.js"></script>}
-      {signedIn && <Script src={`spotifyPlayer.js?random=${generateRandomString(16)}`}></Script>}
+      {signedIn && <script src={`spotifyPlayer.js?random=${generateRandomString(16)}`}></script>}
       <Script type="text/javascript" charSet="utf-8" src={signedIn ? "scenario30445.js" : "scenario30446.js"} ></Script>
       <Script type="text/javascript" charSet="utf-8" src="jszip.min.js" ></Script>
       <Script type="text/javascript" src={`app.js?random=${generateRandomString(16)}`} defer={true} onLoad={()=>{setErrorText("")}}></Script>
