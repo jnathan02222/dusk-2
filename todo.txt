@@ -1,6 +1,10 @@
+ISSUES
+spotify script loading in the wrong order
+webpack error when visiting play-guest
+
 HIGH PRIOTIY
-Add more error handling (search 'fetch')
-Game not loading
+#Add more error handling (search 'fetch')
+#Game not loading
 
 LOW PRIOTIY
 Webplayer should start song on restart 
