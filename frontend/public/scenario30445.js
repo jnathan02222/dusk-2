@@ -18135,7 +18135,7 @@ function PlayButton_act($this) {
                                                     window.location.replace(window.location.origin);
                                                 }
                                             }else{
-                                                window.location.replace(window.location.origin + "/unexpected-error");
+                                                window.location.replace(window.location.origin + "/unexpected-error?inner=" + response.status);
                                             }
                                         }
                                     );
@@ -18149,7 +18149,7 @@ function PlayButton_act($this) {
                             window.location.replace(window.location.origin);
                         }
                     }else{
-                        window.location.replace(window.location.origin + "/unexpected-error");
+                        window.location.replace(window.location.origin + "/unexpected-error?outer=" + response.status);
                     }
                 }
             );

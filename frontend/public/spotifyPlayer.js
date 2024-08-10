@@ -25,10 +25,6 @@ window.onSpotifyWebPlaybackSDKReady = () => {
                         }
                     });
 
-                    spotify_player.addListener('initialization_error', ({ message }) => {
-                        window.location.replace(window.location.origin + "/unexpected-error");
-                    });
-
                     spotify_player.addListener('authentication_error', ({ message }) => {
                         if(confirm("You've been signed out. Return to home?")){
                             window.location.replace(window.location.origin);
@@ -38,12 +34,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
                     spotify_player.addListener('account_error', ({ message }) => {
                         window.location.replace(window.location.origin + "/unregistered-user");
                     });
-
-                    spotify_player.addListener('playback_error', ({ message }) => {
-                        window.location.replace(window.location.origin + "/unexpected-error");
-                    });
             
-        
                     spotify_player.connect();
                 }
             )
