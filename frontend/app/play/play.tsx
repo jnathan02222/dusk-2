@@ -1,10 +1,11 @@
 "use client"
 import SearchBar from "./searchBar";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Script from 'next/script'
 
 export default function Play({signedIn} : {signedIn : boolean}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [errorText, setErrorText] = useState<string>("JavaScript may have failed to load. Please reload the page.");
 
   const focusCanvas = (event : React.MouseEvent<HTMLElement>) => {
     const elem : HTMLElement = event.target as HTMLElement;
@@ -16,13 +17,23 @@ export default function Play({signedIn} : {signedIn : boolean}) {
     } 
   }
 
+  //To avoid caching of script, a random query parameter is appended
+  var generateRandomString = function(length : number) {
+    var text = '';
+    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (var i = 0; i < length; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+  };
+
   return (
     <main onClick={focusCanvas} className="flex min-h-screen justify-center	items-center p-24">
       {signedIn && <script src="https://sdk.scdn.co/spotify-player.js"></script>}
-      {signedIn && <script src="spotifyPlayer.js"></script>}
+      {signedIn && <Script src={`spotifyPlayer.js?random=${generateRandomString(16)}`}></Script>}
       <Script type="text/javascript" charSet="utf-8" src={signedIn ? "scenario30445.js" : "scenario30446.js"} ></Script>
-      <Script type="text/javascript" charSet="utf-8" src="jszip.min.js"></Script>
-      <Script type="text/javascript" src="app.js" defer={true}></Script>
+      <Script type="text/javascript" charSet="utf-8" src="jszip.min.js" ></Script>
+      <Script type="text/javascript" src={`app.js?random=${generateRandomString(16)}`} defer={true} onLoad={()=>{setErrorText("")}}></Script>
       
       <div className='relative text-white' style={{width: 960}}>
         <div className={signedIn ? "" : "hidden"}><SearchBar></SearchBar></div>
@@ -35,7 +46,7 @@ export default function Play({signedIn} : {signedIn : boolean}) {
             
       </div>
       <div  className="text-white absolute w-full flex min-h-screen justify-center	items-center -z-10">
-        <p>JavaScript may have failed to load. Wait a minute before reloading the page.</p>
+        <p>{errorText}</p>
       </div>
     </main>
   );

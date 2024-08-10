@@ -22,7 +22,13 @@ export default function SearchBar(){
         headers: {
           'Content-Type': 'application/json'
         }
-      });
+      }).then(
+        (response)=>{
+          if(!response.ok){
+            window.location.replace(window.location.origin + "/unexpected-error");
+          }
+        }
+      );
     }
   , [])
 
@@ -46,10 +52,20 @@ export default function SearchBar(){
           fetch('/spotify-audio-analysis').then(
               (response) => {
                   if(response.ok){
-                      setLoading('verified');
+                    setLoading('verified');
+                  }else if(response.status == 403){
+                    window.location.replace(window.location.origin + "/unregistered-user");
+                  }else if(response.status == 401){
+                    if(confirm("You've been signed out. Return to home?")){
+                      window.location.replace(window.location.origin);
+                    }
+                  }else{
+                    window.location.replace(window.location.origin + "/unexpected-error");
                   }
               }
           );
+        }else{
+          window.location.replace(window.location.origin + "/unexpected-error");
         }
       }
     );
@@ -80,29 +96,40 @@ export default function SearchBar(){
     
     fetch('/spotify-search?'+params.toString()).then(
       (response) => {
-        response.json().then(
-          (data) => {
-            
-            var results : Array<string> = [];
-            var ids : Array<string> = [];
-
-            data["tracks"]["items"].map(
-              (track : Record<string, any>) => {
-                var title = track["name"] + " - ";
-                
-                track["artists"].map(
-                  (artist : Record<string, any>, index : number) => {
-                    title += artist["name"] + ((index == track["artists"].length-1) ? "" : ", ");
-                  }
-                )
-                
-                ids.push(track["id"])
-                results.push(title);
-              }
-            );
-            setCurrentSearchResults(results, ids, timestamp);
+        if(response.ok){
+          response.json().then(
+            (data) => {
+              
+              var results : Array<string> = [];
+              var ids : Array<string> = [];
+  
+              data["tracks"]["items"].map(
+                (track : Record<string, any>) => {
+                  var title = track["name"] + " - ";
+                  
+                  track["artists"].map(
+                    (artist : Record<string, any>, index : number) => {
+                      title += artist["name"] + ((index == track["artists"].length-1) ? "" : ", ");
+                    }
+                  )
+                  
+                  ids.push(track["id"])
+                  results.push(title);
+                }
+              );
+              setCurrentSearchResults(results, ids, timestamp);
+            }
+          );
+        }else if(response.status == 403){
+          window.location.replace(window.location.origin + "/unregistered-user");
+        }else if(response.status == 401){
+          if(confirm("You've been signed out. Return to home?")){
+            window.location.replace(window.location.origin);
           }
-        );
+        }else{
+          window.location.replace(window.location.origin + "/unexpected-error");
+        }
+        
       }
     );
   }

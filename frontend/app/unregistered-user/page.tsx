@@ -9,7 +9,6 @@ export default function UnregisteredUser() {
   const [loading, setLoading] = useState<loadingStates>('hide');
 
   function addUser (formData : FormData)  {
-    console.log("HI!")
     setLoading('loading');
     fetch('/add-user', {
       method: "PUT",

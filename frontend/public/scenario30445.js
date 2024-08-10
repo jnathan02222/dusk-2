@@ -18087,50 +18087,70 @@ function PlayButton_act($this) {
             document.getElementById('scenarioCanvas').focus();
             fetch("/spotify-audio-analysis").then(
                 response => {
-                    response.json().then(
-                        data=>{
-                            
-                            $this.$city4.$getTrack().$initialize(data.sections.length, data.bars.length, data.beats.length);
-                            
-                            function logBars(value, index, array) {
-                                if(index == array.length - 1){
-                                    $this.$city4.$getTrack().$addBar(value.start, data.track.duration - value.start + 10, value.confidence)
-                                }else{
-                                    $this.$city4.$getTrack().$addBar(value.start, value.duration, value.confidence)
-                                }
-                            }
-                            data.bars.forEach(logBars);
-                            
-                            var average_confidence = 0;
-                            var total_confidence = 0;
-                            function logNotes(value, index, array) {
-                                total_confidence += value.confidence;
+                    if(response.ok){
+                        response.json().then(
+                            data=>{
                                 
-                                $this.$city4.$getTrack().$addNote(value.start, value.duration, value.confidence, value.loudness_max_time * value.loudness_max)
-                            }
-                            
-                            data.beats.forEach(logNotes);
-                            average_confidence = total_confidence/data.beats.length;
-                            
-                            
-                            $this.$started0 = 1;
-                            $this.$duration = data.track.duration;
-        
-                            spotify_player.setVolume(0).then(()=>{
-                                fetch(`/start-webplayer?device_id=${spotify_device_id}`, {method : "PUT"}).then(
-                                    response=>{
-                                        setTimeout(function(){
-                                            spotify_player.pause().then(()=>{
-                                                spotify_player.setVolume(0.5).then(()=>{
-                                                    $this.$running = 1;
-                                                });
-                                            });
-                                        }, 2000)
+                                $this.$city4.$getTrack().$initialize(data.sections.length, data.bars.length, data.beats.length);
+                                
+                                function logBars(value, index, array) {
+                                    if(index == array.length - 1){
+                                        $this.$city4.$getTrack().$addBar(value.start, data.track.duration - value.start + 10, value.confidence)
+                                    }else{
+                                        $this.$city4.$getTrack().$addBar(value.start, value.duration, value.confidence)
                                     }
-                                );
-                            });
+                                }
+                                data.bars.forEach(logBars);
+                                
+                                var average_confidence = 0;
+                                var total_confidence = 0;
+                                function logNotes(value, index, array) {
+                                    total_confidence += value.confidence;
+                                    
+                                    $this.$city4.$getTrack().$addNote(value.start, value.duration, value.confidence, value.loudness_max_time * value.loudness_max)
+                                }
+                                
+                                data.beats.forEach(logNotes);
+                                average_confidence = total_confidence/data.beats.length;
+                                
+                                
+                                $this.$started0 = 1;
+                                $this.$duration = data.track.duration;
+            
+                                spotify_player.setVolume(0).then(()=>{
+                                    fetch(`/start-webplayer?device_id=${spotify_device_id}`, {method : "PUT"}).then(
+                                        response=>{
+                                            if(response.ok){
+                                                setTimeout(function(){
+                                                    spotify_player.pause().then(()=>{
+                                                        spotify_player.setVolume(0.5).then(()=>{
+                                                            $this.$running = 1;
+                                                        });
+                                                    });
+                                                }, 2000)
+                                            }else if(response.status == 403){
+                                                window.location.replace(window.location.origin + "/unregistered-user");
+                                            }else if(response.status == 401){
+                                                if(confirm("You've been signed out. Return to home?")){
+                                                    window.location.replace(window.location.origin);
+                                                }
+                                            }else{
+                                                window.location.replace(window.location.origin + "/unexpected-error");
+                                            }
+                                        }
+                                    );
+                                });
+                            }
+                        );
+                    }else if(response.status == 403){
+                        window.location.replace(window.location.origin + "/unregistered-user");
+                    }else if(response.status == 401){
+                        if(confirm("You've been signed out. Return to home?")){
+                            window.location.replace(window.location.origin);
                         }
-                    );
+                    }else{
+                        window.location.replace(window.location.origin + "/unexpected-error");
+                    }
                 }
             );
         } else if (g_Greenfoot_mouseClicked(null)) {

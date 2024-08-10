@@ -246,7 +246,7 @@ app.prepare().then( () => {
                   }
                 });
               }
-            ).error(
+            ).catch(
               ()=>{
                 res.status(500).send("Something went wrong.");
               }
@@ -282,7 +282,7 @@ app.prepare().then( () => {
         request.put(options, function(error, response, body) {
           if(error){
             console.error('Error starting playback: ', error);
-            res.status(500).send({ error: 'Failed to fetch data from Spotify API' })
+            res.status(500).send({ error: 'Failed to start webplayer' })
           }else{
             res.status(response.statusCode).send(body);
           }
