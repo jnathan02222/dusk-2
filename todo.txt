@@ -1,6 +1,7 @@
 ISSUES
 spotify script loading in the wrong order
 webpack error when visiting play-guest
+getting signed out on unexpected user page will not give you right error
 
 HIGH PRIOTIY
 #Add more error handling (search 'fetch')
