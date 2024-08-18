@@ -16,7 +16,7 @@ export default function Play({signedIn} : {signedIn : boolean}) {
     } 
   }
 
-  const scripts = useRef<Array<Node>>([]);
+  const scriptsLoaded = useRef<boolean>(false);
 
   function addScript(source : string, onload : () => void = () => {}, addNow : boolean = true){
     var script = document.createElement('script');
@@ -24,11 +24,14 @@ export default function Play({signedIn} : {signedIn : boolean}) {
     if(addNow)
       document.body.appendChild(script);
     script.onload = onload;
-    scripts.current.push(script);
     return script;
   }
 
   useEffect(()=>{
+    if(scriptsLoaded.current){
+      return;
+    }
+
     if(signedIn){
       addScript('https://sdk.scdn.co/spotify-player.js');
       var spotifyPlayerScript = addScript("spotifyPlayer.js");
@@ -40,12 +43,7 @@ export default function Play({signedIn} : {signedIn : boolean}) {
     addScript('jszip.min.js');
     addScript('app.js', ()=>{setErrorText("")});
 
-    return () => {
-      for (const script of scripts.current){
-        document.body.removeChild(script);
-      }
-      scripts.current = [];
-    }
+    scriptsLoaded.current = true;
   }, []);
 
   return (
