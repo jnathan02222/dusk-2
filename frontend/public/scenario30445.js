@@ -18117,7 +18117,7 @@ function PlayButton_act($this) {
                                 $this.$started0 = 1;
                                 $this.$duration = data.track.duration;
 
-                                if(spotify_player === undefined){
+                                if(typeof spotify_player === "undefined"){
                                     window.location.replace(window.location.origin + "/unexpected-error");
                                 }
             
