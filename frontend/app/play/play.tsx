@@ -1,7 +1,6 @@
 "use client"
 import SearchBar from "./searchBar";
-import { useRef, useState } from "react";
-import Script from 'next/script'
+import { useRef, useState, useEffect } from "react";
 
 export default function Play({signedIn} : {signedIn : boolean}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -17,24 +16,40 @@ export default function Play({signedIn} : {signedIn : boolean}) {
     } 
   }
 
-  //To avoid caching of script, a random query parameter is appended
-  var generateRandomString = function(length : number) {
-    var text = '';
-    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (var i = 0; i < length; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
+  const scripts = useRef<Array<Node>>([]);
+
+  function addScript(source : string, onload : () => void = () => {}, addNow : boolean = true){
+    var script = document.createElement('script');
+    script.src = source;
+    if(addNow)
+      document.body.appendChild(script);
+    script.onload = onload;
+    scripts.current.push(script);
+    return script;
+  }
+
+  useEffect(()=>{
+    if(signedIn){
+      addScript('https://sdk.scdn.co/spotify-player.js');
+      var spotifyPlayerScript = addScript("spotifyPlayer.js");
+      window.onSpotifyWebPlaybackSDKReady = () => {
+        document.body.appendChild(spotifyPlayerScript);
+      };
     }
-    return text;
-  };
+    addScript(signedIn ? "scenario30445.js" : "scenario30446.js");
+    addScript('jszip.min.js');
+    addScript('app.js', ()=>{setErrorText("")});
+
+    return () => {
+      for (const script of scripts.current){
+        document.body.removeChild(script);
+      }
+      scripts.current = [];
+    }
+  }, []);
 
   return (
     <main onClick={focusCanvas} className="flex min-h-screen justify-center	items-center p-24">
-      {signedIn && <script src="https://sdk.scdn.co/spotify-player.js"></script>}
-      {signedIn && <script src={`spotifyPlayer.js?random=${generateRandomString(16)}`}></script>}
-      <Script type="text/javascript" charSet="utf-8" src={signedIn ? "scenario30445.js" : "scenario30446.js"} ></Script>
-      <Script type="text/javascript" charSet="utf-8" src="jszip.min.js" ></Script>
-      <Script type="text/javascript" src={`app.js?random=${generateRandomString(16)}`} defer={true} onLoad={()=>{setErrorText("")}}></Script>
-      
       <div className='relative text-white' style={{width: 960}}>
         <div className={signedIn ? "" : "hidden"}><SearchBar></SearchBar></div>
         <canvas ref={canvasRef} className="outline-none rounded-lg mb-4 mt-4" tabIndex={0} id="scenarioCanvas" width="972" height="662">Your browser does not support the canvas tag.</canvas>
