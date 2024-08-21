@@ -7,6 +7,10 @@ fetch("/spotify-token").then(
                 const token = data["token"];
                 console.log(token);
 
+                if(window.Spotify == undefined){
+                    window.location.replace(window.location.origin + "/unexpected-error");
+                }
+
                 spotify_player = new window.Spotify.Player({
                     name: 'Dusk',
                     getOAuthToken: cb => { cb(token); },
