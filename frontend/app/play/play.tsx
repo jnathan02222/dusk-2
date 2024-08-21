@@ -34,7 +34,7 @@ export default function Play({signedIn} : {signedIn : boolean}) {
 
     if(signedIn){
       addScript('https://sdk.scdn.co/spotify-player.js');
-      var spotifyPlayerScript = addScript("spotifyPlayer.js");
+      var spotifyPlayerScript = addScript("spotifyPlayer.js", ()=>{}, false);
       window.onSpotifyWebPlaybackSDKReady = () => {
         document.body.appendChild(spotifyPlayerScript);
       };

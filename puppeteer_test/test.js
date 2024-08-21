@@ -12,7 +12,6 @@ async function addSpotifyUser(){
     var page = await browser.newPage();
     await page.setViewport({width: 1920, height: 1024});
     
-
     //Load cookies
     var cookiesString = await fs.readFile('./cookies.json');
     var cookies = JSON.parse(cookiesString);
