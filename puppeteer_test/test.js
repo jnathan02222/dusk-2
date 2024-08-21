@@ -26,12 +26,16 @@ async function addSpotifyUser(){
         await page.locator('.ButtonInner-sc-14ud5tc-0').setTimeout(3000).click();
         await page.waitForNavigation();
         await page.goto(dashboard_url);
+        console.log("Logged in.")
+
     }catch{
     }
     try {
         await page.locator(`::-p-xpath(//tr[td[p[contains(text(), "${dusk_username}")]]]//button)`).setTimeout(3000).click();
         await page.locator('.Link-sc-1v366a6-0').setTimeout(3000).click();
         await new Promise(resolve => setTimeout(resolve, 3000));
+        console.log("User deleted")
+
     } catch {
 
     }
