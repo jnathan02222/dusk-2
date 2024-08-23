@@ -78,8 +78,13 @@ async function setupBrowser(){
 }
 
 async function addSpotifyUser(email){
+  const browser = await puppeteer.launch({headless:true});
   const page = await browser.newPage();
   await page.setViewport({width: 1920, height: 1024});
+
+  var cookiesString = await fs.readFile('./cookies.json');
+  var cookies = JSON.parse(cookiesString);
+  await page.setCookie(...cookies);
 
   //Login if redirected
   await page.goto(dashboard_url);
@@ -92,6 +97,10 @@ async function addSpotifyUser(email){
     await page.goto(dashboard_url);
   }catch{
   } 
+
+  cookies = await page.cookies();
+  await fs.writeFile('./cookies.json', JSON.stringify(cookies))
+
   //Delete first user if necessary
   try{
     await page.locator('#name').setTimeout(3000).click();
