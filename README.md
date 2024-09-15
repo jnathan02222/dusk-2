@@ -1,5 +1,6 @@
 # Dusk
 A browser game based on the Spotify API. Implemented using Next.js, Express.js and Puppeteer.
+
 Developer version hosted at [duskmusic.live](https://duskmusic.live).
 
 # Installation
